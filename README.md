@@ -159,15 +159,17 @@ Exchange happens through these steps:
 
 ## Security considerations
 
+The two layers of encryption described above ensures resilience against at least one of the following scenarios:
+
 ### Man-in-the-Middle attacks
 
-The communication between app and extension usually happens in a local network, but still there is a risk of malicious actors in the same network. For instance an attacker could have gained access to the local network and is able to sniff any network communication.
+The communication between app and extension usually happens in a local network, but there is still a risk of malicious actors in the same network. For instance an attacker could have gained access to the local network and is able to sniff any network communication.
 
 Mitigations:
 
   * Each communication is encrypted as described above
-  * The `PKext` used to encrypt the `OTKrs` is confirmed by using a QR-code and a fingerprint `F`. Therefor all data encrypted with `PKext` is only decryptable  by the extension.
-  * For each link request and for each credential request a shortened fingerprint is promped to the user on both ends to confirm uniquenes. This ensures that `PKapp` is indeed the public key of the app.
+  * The `PKext` used to encrypt the `OTKrs` is confirmed by using a QR-code and a fingerprint `F`. Therefor all data encrypted with `PKext` can only be decrypted  by the extension, not by any man-in-the-middle.
+  * For each link request and for each credential request a shortened fingerprint is promped to the user on both ends to confirm uniquenes. This ensures that `PKapp` is indeed the public key of the app, and not from a man-in-the-middle.
 
 ### Offline observers
 
@@ -175,7 +177,7 @@ Meant is an attacker who is able to capture the QR code during the linking phase
 
 Mitigations:
 
-  * If an attacker is able to capture `SK` they Won't be able to read the `BK`, since it is encrypted with a `TKrs` derived and encrypted by `PKext`. 
+  * If an attacker is able to capture `SK` they won't be able to read the `BK`, since it is encrypted with a `TKrs` derived and encrypted by `PKext`. 
 
 
 ### Leak of stored extension secret keys
@@ -189,10 +191,14 @@ Mitigations:
 
 ### Post-Quantum consideration
 
-Consider RSA will be broken through Quantum Computing. If so, all encrypted data with the involved RSA keys are revealed.
+Consider RSA will be broken through Quantum Computing. If so, all encrypted data, even old recorded data, with the involved RSA keys are revealed.
 
 Mitigations:
 
-  * The `BK` is shared during the linking phase through a confirmed and secure channel (encrypted by `SK`). As long as `SK` is not leaked, the `BK` should be safe to decrypt the `TKn`.
+  * Also the `BK`  is required to decrypt the Transport Keys (`TKn`)
+  * The `BK` is shared during the linking phase through a confirmed and secure channel (encrypted by `SK`, which only lived for a short time in memory). As long as `SK` was not leaked, the `BK` should be safe to decrypt the `TKn`.
   
  
+ ### Conclusion
+
+ As long as only one aspect is ever leaked, at least the critical communication back to the extension, which contains the passwords, can still be considered as secure. This also applies to recorded communications.

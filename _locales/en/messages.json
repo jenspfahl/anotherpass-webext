@@ -16,7 +16,7 @@
         "description" : "Info text"
     },
     "extensionHelp1": {
-        "message": "This is an browser extension to access a linked <a href=\"https://anotherpass.jepfa.de\" target=\"_blank\">ANOTHERpass</a> vault.",
+        "message": "This is a browser extension to access a linked <a href=\"https://anotherpass.jepfa.de\" target=\"_blank\">ANOTHERpass</a> vault.",
         "description" : "1. Help chapter"
     },
     "extensionHelp2": {
